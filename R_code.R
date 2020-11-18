@@ -8,122 +8,122 @@ seq_split=unlist(strsplit(sequence,""))
 seq_split=seq_split[seq_split !="\n"]
 seq_joined=paste(seq_split,collapse="")
 
-######### INSERTIONS
+######### DUPLICATIONS
 
-#Generate dataframe with all insertions
-seq_ins=as.data.frame(matrix(,nrow=length(seq_split)+1,ncol=length(seq_split)))
+#Generate dataframe with all duplications
+seq_dup=as.data.frame(matrix(,nrow=length(seq_split)+1,ncol=length(seq_split)))
 
 for (i in 1:length(seq_split)){
-  seq_ins[,i]=append(seq_split,seq_split[i],after=i)
+  seq_dup[,i]=append(seq_split,seq_split[i],after=i)
 }
 
-#If want all insertions joined
+#If want all duplications joined
 
-Ins_Joined=as.data.frame(matrix(,nrow=10,ncol=length(seq_split)))
+Dup_Joined=as.data.frame(matrix(,nrow=10,ncol=length(seq_split)))
 
-for (i in 1:ncol(Ins_Joined)){
-  Ins_Joined[1,i]=paste(seq_ins[,i],collapse="")
+for (i in 1:ncol(Dup_Joined)){
+  Dup_Joined[1,i]=paste(seq_dup[,i],collapse="")
   
 }
 
 #Find what position a stop codon is at, might need to numbers in here depending on length of amino acid and bp sequences
-Ins_codons=as.data.frame(matrix(,nrow=length(seq_split)/3,ncol=length(seq_split)))
-for (i in 1:ncol(Ins_Joined)){
-  Ins_codons[1:216,i]=sapply(seq(1,648,by=3),function(j) substr(Ins_Joined[1,i],j,j+2))
+Dup_codons=as.data.frame(matrix(,nrow=length(seq_split)/3,ncol=length(seq_split)))
+for (i in 1:ncol(Dup_Joined)){
+  Dup_codons[1:216,i]=sapply(seq(1,648,by=3),function(j) substr(Dup_Joined[1,i],j,j+2))
 }
 
 #This sets na's just to 1000, can change if desired
-for (i in 1:ncol(Ins_Joined)){
-  Ins_codons[217,i]=grep("TAG",Ins_codons[,i])[1]
-  Ins_codons[218,i]=grep("TAA",Ins_codons[,i])[1]
-  Ins_codons[219,i]=grep("TGA",Ins_codons[,i])[1]
-  stringg=c(Ins_codons[217,i],Ins_codons[218,i],Ins_codons[219,i])
+for (i in 1:ncol(Dup_Joined)){
+  Dup_codons[217,i]=grep("TAG",Dup_codons[,i])[1]
+  Dup_codons[218,i]=grep("TAA",Dup_codons[,i])[1]
+  Dup_codons[219,i]=grep("TGA",Dup_codons[,i])[1]
+  stringg=c(Dup_codons[217,i],Dup_codons[218,i],Dup_codons[219,i])
   stringg[is.na(stringg)]=1000
-  Ins_codons[220,i]=min(as.numeric(stringg))
+  Dup_codons[220,i]=min(as.numeric(stringg))
 }
 
 d=c(1:648)
-plot(d,Ins_codons[220,],xlab="bp",ylab="location of first stop codon")  
-title("H1E insertions")
+plot(d,Dup_codons[220,],xlab="bp",ylab="location of first stop codon")  
+title("H1.1 duplications")
 
-Ins_Joined=Ins_Joined[1,]
-write.csv(Ins_Joined, "/path.csv", row.names=FALSE)
+Dup_Joined=Dup_Joined[1,]
+write.csv(Dup_Joined, "/path.csv", row.names=FALSE)
 
-#Convert all dna sequences to amino acids, for insertions
+#Convert all dna sequences to amino acids, for duplications
 
-Ins_AAs=Ins_codons
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TTT",replacement="F",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TTC",replacement="F",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TTA",replacement="L",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TTG",replacement="L",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CTT",replacement="L",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CTC",replacement="L",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CTA",replacement="L",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CTG",replacement="L",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="ATT",replacement="I",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="ATC",replacement="I",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="ATA",replacement="I",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="ATG",replacement="M",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GTT",replacement="V",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GTC",replacement="V",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GTA",replacement="V",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GTG",replacement="V",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TCT",replacement="S",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TCC",replacement="S",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TCA",replacement="S",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TCG",replacement="S",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CCT",replacement="P",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CCC",replacement="P",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CCA",replacement="P",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CCG",replacement="P",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="ACT",replacement="T",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="ACC",replacement="T",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="ACA",replacement="T",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="ACG",replacement="T",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GCT",replacement="A",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GCC",replacement="A",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GCA",replacement="A",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GCG",replacement="A",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TAT",replacement="Y",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TAC",replacement="Y",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TAA",replacement="*",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TAG",replacement="*",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CAT",replacement="H",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CAC",replacement="H",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CAA",replacement="Q",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CAG",replacement="Q",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="AAT",replacement="N",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="AAC",replacement="N",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="AAA",replacement="K",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="AAG",replacement="K",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GAT",replacement="D",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GAC",replacement="D",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GAA",replacement="E",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GAG",replacement="E",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TGT",replacement="C",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TGC",replacement="C",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TGA",replacement="*",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="TGG",replacement="W",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CGT",replacement="R",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CGC",replacement="R",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CGA",replacement="R",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="CGG",replacement="R",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="AGT",replacement="S",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="AGC",replacement="S",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="AGA",replacement="R",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="AGG",replacement="R",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GGT",replacement="G",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GGC",replacement="G",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GGA",replacement="G",fixed=TRUE)
-Ins_AAs=lapply(Ins_AAs,gsub,pattern="GGG",replacement="G",fixed=TRUE)
+Dup_AAs=Dup_codons
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TTT",replacement="F",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TTC",replacement="F",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TTA",replacement="L",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TTG",replacement="L",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CTT",replacement="L",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CTC",replacement="L",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CTA",replacement="L",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CTG",replacement="L",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="ATT",replacement="I",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="ATC",replacement="I",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="ATA",replacement="I",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="ATG",replacement="M",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GTT",replacement="V",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GTC",replacement="V",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GTA",replacement="V",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GTG",replacement="V",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TCT",replacement="S",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TCC",replacement="S",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TCA",replacement="S",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TCG",replacement="S",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CCT",replacement="P",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CCC",replacement="P",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CCA",replacement="P",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CCG",replacement="P",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="ACT",replacement="T",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="ACC",replacement="T",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="ACA",replacement="T",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="ACG",replacement="T",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GCT",replacement="A",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GCC",replacement="A",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GCA",replacement="A",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GCG",replacement="A",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TAT",replacement="Y",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TAC",replacement="Y",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TAA",replacement="*",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TAG",replacement="*",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CAT",replacement="H",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CAC",replacement="H",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CAA",replacement="Q",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CAG",replacement="Q",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="AAT",replacement="N",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="AAC",replacement="N",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="AAA",replacement="K",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="AAG",replacement="K",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GAT",replacement="D",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GAC",replacement="D",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GAA",replacement="E",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GAG",replacement="E",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TGT",replacement="C",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TGC",replacement="C",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TGA",replacement="*",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="TGG",replacement="W",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CGT",replacement="R",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CGC",replacement="R",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CGA",replacement="R",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="CGG",replacement="R",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="AGT",replacement="S",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="AGC",replacement="S",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="AGA",replacement="R",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="AGG",replacement="R",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GGT",replacement="G",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GGC",replacement="G",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GGA",replacement="G",fixed=TRUE)
+Dup_AAs=lapply(Dup_AAs,gsub,pattern="GGG",replacement="G",fixed=TRUE)
 
-Ins_AAs=as.data.frame(matrix(unlist(Ins_AAs),nrow=length(unlist(Ins_AAs[1]))))
-Ins_AAs=Ins_AAs[-(217:220),]
+Dup_AAs=as.data.frame(matrix(unlist(Dup_AAs),nrow=length(unlist(Dup_AAs[1]))))
+Dup_AAs=Dup_AAs[-(217:220),]
 
 #Join all amino acids
 AA_Joined=as.data.frame(matrix(,nrow=1,ncol=length(seq_split)))
 for (i in 1:ncol(AA_Joined)){
-  AA_Joined[,i]=paste(Ins_AAs[,i],collapse="")
+  AA_Joined[,i]=paste(Dup_AAs[,i],collapse="")
 }
 
 #delete everything after first stop codon
@@ -131,8 +131,8 @@ for (i in 1:ncol(AA_Joined)){
   AA_Joined[,i]=gsub("[*].*$","",AA_Joined[,i])
 }
 
-######To calculate net charge for insertions
-AAs_forcharge=as.data.frame(matrix(,nrow=(nrow(Ins_AAs[1])+1),ncol=length(seq_split)))
+######To calculate net charge for duplications
+AAs_forcharge=as.data.frame(matrix(,nrow=(nrow(Dup_AAs[1])+1),ncol=length(seq_split)))
 for (i in 1:ncol(AA_Joined)){
   AAs_forcharge[1:nchar(AA_Joined[,i]),i]=unlist(strsplit(AA_Joined[,i],""))
 }
@@ -163,9 +163,9 @@ for (i in 1:ncol(AAs_forcharge)){
 
 d=c(1:648)
 plot(d,AAs_forcharge[217,],xlab="bp",ylab="Net charge protein")
-title("insertions- Net charge")
+title("Duplications - Net charge")
 
-#######END INSERTIONS
+#######END DUPLICATIONS
 
 
 ####BEGIN DELETIONS
@@ -287,7 +287,7 @@ for (i in 1:ncol(AA_Del_Joined)){
 
 write.csv(AA_Joined, "/path.csv", row.names=FALSE)
 
-#To calculate net charge for insertions
+#To calculate net charge for duplications
 AAs_Del_forcharge=as.data.frame(matrix(,nrow=(nrow(Del_AAs[1])+1),ncol=length(seq_split)))
 for (i in 1:ncol(AA_Del_Joined)){
   AAs_Del_forcharge[1:nchar(AA_Del_Joined[,i]),i]=unlist(strsplit(AA_Del_Joined[,i],""))
@@ -408,7 +408,7 @@ WT_AAs=lapply(WT_AAs,gsub,pattern="GGG",replacement="G",fixed=TRUE)
 WT_AAs=as.data.frame(matrix(unlist(WT_AAs),nrow=length(unlist(WT_AAs[1]))))
 WT_AAs=WT_AAs[-(217:220),]
 
-###WT length for insertions
+###WT length for duplications
 
 WT=as.data.frame(matrix(,nrow=(nrow(WT_AAs[1])+1),ncol=length(seq_split)))
 for (i in 1:ncol(WT)){
@@ -443,10 +443,10 @@ for (i in 1:ncol(WT)){
 points(d,WT[217,],col="red")
 
 #Subtract WT from Mut
-Net_ins=unlist(as.numeric(AAs_forcharge[217,]))-unlist(as.numeric(WT[217,]))
-write.csv(Net_ins, "/path.csv", row.names=FALSE)
-plot(d,Net_ins,ylim=c(-40,20),ylab="Net charge (Mut-WT)",xlab="BP")
-title("Insertions")
+Net_dup=unlist(as.numeric(AAs_forcharge[217,]))-unlist(as.numeric(WT[217,]))
+write.csv(Net_dup, "/path.csv", row.names=FALSE)
+plot(d,Net_dup,ylim=c(-40,20),ylab="Net charge (Mut-WT)",xlab="BP")
+title("Duplications")
 
 #WT length for deletions
 
