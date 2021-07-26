@@ -1,5 +1,16 @@
 # H1.4-repository
-This is a repository for source R code to generate insertion and deletion mutations in the H1E sequences
+This is the repository for the paper "Mutations of the histone linker H1-4 in neurodevelopmental disorders and functional characterization of neurons expressing C-terminus frameshift mutant H1.4"
+Contains R scripts and processed sequencing files needed to run the QC, differential analysis, and generate mutations in the H1E sequences as it was done in the paper.
+
+## QC script
+
+The QC script (Master_QC_Script.R) by default runs using the files used in the paper for QC (contained in this repository). However, aligning the fastQ files deposited in GEO under GSE180609 using the methods outlined in the paper should generate the same files.  
+
+## Differential analysis script
+
+The differential analysis script (Master_DA_Script.R) will perform the differential analysis on the processed sequencing files included in the repository. The script reproduces all RNA-seq figures present in the paper.
+
+## This is also a repository for the source R code to generate insertion and deletion mutations in the H1E sequences
 
 R code was written and run in RStudio v1.3.1056.
 
