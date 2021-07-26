@@ -10,9 +10,9 @@ The QC script (Master_QC_Script.R) by default runs using the files used in the p
 
 The differential analysis script (Master_DA_Script.R) will perform the differential analysis on the processed sequencing files included in the repository. The script reproduces all RNA-seq figures present in the paper.
 
-## This is also a repository for the source R code to generate insertion and deletion mutations in the H1E sequences
+## Source R code to generate insertion and deletion mutations in the H1E sequences
 
-R code was written and run in RStudio v1.3.1056.
+R code was written and run in RStudio v1.3.1056. The script to run is Mutations.R
 
 Code will generate single bp insertions (duplications) and deletions into any sequence entered into the first variable "sequence". It will find the predicted first stop codon and resulting sequence as well as the predicted protein charge for each mutation simulation. This was run on the following sequences of the histone H1 genes.
 
